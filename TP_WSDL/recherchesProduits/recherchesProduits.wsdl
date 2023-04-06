@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="RechercheProduitsService" xmlns:tns="http://example.com/tns" targetNamespace="http://example.com/recherche_produits" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<!-- Définitions des types de données -->
+	<types>
+		<schema targetNamespace="http://example.com/recherche_produits/types" xmlns="http://www.w3.org/2001/XMLSchema">
+			<!-- Définition d'un type de donnée représentant un produit -->
+			<complexType name="Produit">
+				<sequence>
+					<element name="nom" type="xsd:string" />
+					<element name="description" type="xsd:string" />
+					<element name="prix" type="xsd:decimal" />
+					<element name="stock" type="xsd:integer" />
+				</sequence>
+			</complexType>
+			<!-- Définition d'un type de donnée représentant une liste de produits -->
+			<complexType name="ListeProduits">
+				<sequence>
+					<element name="produit" type="tns:Produit" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<!-- Définition d'un type de donnée représentant un critère de recherche de produits -->
+			<complexType name="CritereRecherche">
+				<sequence>
+					<element name="nom" type="xsd:string" minOccurs="0" />
+					<element name="description" type="xsd:string" minOccurs="0" />
+					<element name="prix_min" type="xsd:decimal" minOccurs="0" />
+					<element name="prix_max" type="xsd:decimal" minOccurs="0" />
+					<element name="stock_min" type="xsd:integer" minOccurs="0" />
+					<element name="stock_max" type="xsd:integer" minOccurs="0" />
+				</sequence>
+			</complexType>
+		</schema>
+	</types>
+	<!-- Définition du message de recherche de produits -->
+	<message name="rechercherProduitsRequest">
+		<part name="critere" type="tns:CritereRecherche" />
+	</message>
+	<!-- Définition du message de réponse de recherche de produits -->
+	<message name="rechercherProduitsResponse">
+		<part name="liste_produits" type="tns:ListeProduits" />
+	</message>
+	<!-- Définition du portType du service -->
+	<portType name="RechercheProduitsPortType">
+		<!-- Définition de l'opération de recherche de produits -->
+		<soap:operation name="rechercherProduits">
+			<input message="tns:rechercherProduitsRequest" />
+			<output message="tns:rechercherProduitsResponse" />
+		</operation>
+	</portType>
+	<!-- Définition du binding du service -->
+	<binding name="RechercheProduitsBinding" type="tns:RechercheProduitsPortType">
+		<binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<soap:operation name="rechercherProduits">
+			<soap:operation soapAction="http://example.com/recherche_produits/rechercherProduits" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+    
+	<!-- Définition du service -->
+	<service name="RechercheProduitsService">
+		<documentation>
+			Service de recherche de produits
+		</documentation>
+		<port name="RechercheProduitsPort" binding="tns:RechercheProduitsBinding">
+			<address location="http://localhost:8080/recherche_produits" />
+		</port>
+	</service>
+</definitions>
